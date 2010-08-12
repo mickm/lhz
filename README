@@ -1,0 +1,12 @@
+measure linefeeds per second on stdin and display in realtime
+
+examples:
+
+  # web requests per second
+  tail -f access.log |lhz
+
+  # dns (AAA)A-record lookups per second
+  tcpdump -ln udp dst port 53 |grep --line-buffered 'A?' |lhz
+
+  etc...
+

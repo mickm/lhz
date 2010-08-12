@@ -1,0 +1,38 @@
+#!/usr/bin/env node
+
+var interval = 10
+  , elapsed = 0
+  , lines = 0
+  , freq = 0
+  , finished = false
+  , start = new Date().getTime()
+  , stdin = process.openStdin()
+
+stdin.setEncoding('utf8')
+
+stdin.on('data', function(chunk){
+  var ofs = 0
+  while (ofs != -1) {
+    lines++
+    ofs = chunk.indexOf('\n', ofs+1)
+  }
+})
+
+stdin.on('end', function(){
+  finished = true
+})
+
+process.on('exit', function(){
+  seconds = elapsed.toFixed(2)
+  console.log(' (' + lines + ' lines in ' + seconds + ' seconds)')
+})
+
+setInterval(function(){
+  elapsed = (new Date().getTime()-start) / 1000
+  freq = lines / elapsed
+  process.stdout.write('\r' + freq.toFixed(2) + ' Hz\033[K')
+  if (finished) {
+    process.exit(0)
+  }
+}, interval)
+
